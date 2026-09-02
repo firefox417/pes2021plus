@@ -1,0 +1,930 @@
+<!DOCTYPE html>
+<html lang="zh-CN">
+<head>
+  <meta charset="UTF-8">
+  <meta name="viewport" content="width=device-width, initial-scale=1.0">
+  <title>东阳市足球电竞协会抽签及比分工具</title>
+  <style>
+    :root {
+      --bg-image: url('https://t14.baidu.com/it/u=2648855751,2313181335&fm=225&app=113&f=JPEG?w=3348&h=1915&s=55C7D9BA0A1103F94699D8B603005015');
+      --card-bg: rgba(255, 255, 255, 0.92);
+      --text-color: #333333;
+      --sub-bg: rgba(240, 244, 248, 0.85);
+      --border-color: #e0e0e0;
+    }
+
+    body.dark-mode {
+      --card-bg: rgba(30, 30, 30, 0.92);
+      --text-color: #e0e0e0;
+      --sub-bg: rgba(45, 45, 45, 0.85);
+      --border-color: #444444;
+    }
+
+    body.no-bg {
+      background-image: none !important;
+      background-color: #f4f6f9;
+    }
+    body.no-bg.dark-mode {
+      background-color: #121212;
+    }
+
+    * { box-sizing: border-box; font-family: "SimHei", "黑体", -apple-system, BlinkMacSystemFont, sans-serif; }
+    
+    body { 
+      background-image: var(--bg-image);
+      background-size: cover;
+      background-position: center;
+      background-attachment: fixed;
+      background-repeat: no-repeat;
+      padding: 20px; 
+      color: var(--text-color); 
+      max-width: 1100px; 
+      margin: 0 auto; 
+      min-height: 100vh;
+      position: relative;
+      font-size: 18px; 
+      transition: background-color 0.3s, color 0.3s;
+    }
+
+    /* 控制工具栏 */
+    .top-controls {
+      position: fixed;
+      top: 15px;
+      right: 20px;
+      z-index: 1000;
+      display: flex;
+      gap: 12px;
+    }
+    .top-btn {
+      padding: 7px 14px;
+      font-size: 0.72em;
+      border-radius: 20px;
+      border: 1px solid rgba(0,0,0,0.1);
+      background: rgba(255, 255, 255, 0.85);
+      backdrop-filter: blur(4px);
+      cursor: pointer;
+      font-weight: bold;
+      color: #333;
+      box-shadow: 0 2px 6px rgba(0,0,0,0.15);
+      transition: all 0.2s;
+    }
+    .top-btn:hover {
+      transform: translateY(-1px);
+      background: rgba(255, 255, 255, 1);
+    }
+
+    .bottom-controls {
+      position: fixed;
+      bottom: 20px;
+      right: 20px;
+      z-index: 1000;
+    }
+    .btn-reset-all {
+      background: #d32f2f;
+      color: white;
+      padding: 10px 18px;
+      font-size: 0.76em;
+      border-radius: 25px;
+      border: 2px solid #ffffff;
+      box-shadow: 0 4px 12px rgba(0,0,0,0.3);
+      cursor: pointer;
+      font-weight: bold;
+      transition: all 0.2s;
+    }
+    .btn-reset-all:hover {
+      background: #b71c1c;
+      transform: scale(1.05);
+    }
+
+    .main-title-box {
+      background: #ffffff;
+      border: 3px solid #1e3c72;
+      border-radius: 12px;
+      padding: 16px 20px;
+      margin-bottom: 20px;
+      box-shadow: 0 4px 12px rgba(0, 0, 0, 0.15);
+    }
+    .main-title-box h1 { 
+      text-align: center; 
+      color: #000000; 
+      font-family: "SimHei", "黑体", sans-serif;
+      font-weight: bold;
+      margin: 0; 
+      font-size: 1.5em; 
+    }
+
+    .card { 
+      background: var(--card-bg); 
+      backdrop-filter: blur(5px);
+      padding: 20px; 
+      border-radius: 12px; 
+      box-shadow: 0 4px 12px rgba(0,0,0,0.15); 
+      margin-bottom: 20px; 
+      transition: background 0.3s;
+    }
+
+    .section-title { font-weight: bold; font-size: 0.93em; border-bottom: 3px solid #1e3c72; padding-bottom: 8px; margin-bottom: 14px; display: flex; justify-content: space-between; align-items: center; flex-wrap: wrap; gap: 10px; }
+    
+    .filter-container { display: flex; gap: 14px; flex-wrap: wrap; margin-bottom: 15px; background: var(--sub-bg); padding: 10px 14px; border-radius: 10px; align-items: center; }
+    .filter-title { font-weight: bold; font-size: 0.76em; color: #1e3c72; }
+    body.dark-mode .filter-title { color: #64b5f6; }
+
+    .add-form-container {
+      display: flex;
+      gap: 10px;
+      flex-wrap: wrap;
+      margin-bottom: 14px;
+      padding: 10px;
+      background: var(--sub-bg);
+      border-radius: 8px;
+      align-items: center;
+    }
+    .add-form-container input, .add-form-container select {
+      padding: 7px 10px;
+      font-size: 0.72em;
+      border: 1px solid var(--border-color);
+      border-radius: 6px;
+      background: rgba(255, 255, 255, 0.9);
+      color: var(--text-color);
+      outline: none;
+    }
+
+    .checkbox-group { display: grid; grid-template-columns: repeat(auto-fill, minmax(140px, 1fr)); gap: 12px; margin-bottom: 15px; }
+    label { display: flex; align-items: center; gap: 8px; cursor: pointer; user-select: none; font-size: 0.8em; }
+    input[type="checkbox"] { width: 16px; height: 16px; cursor: pointer; }
+    
+    .team-badge { width: 22px; height: 22px; object-fit: contain; vertical-align: middle; flex-shrink: 0; }
+    
+    .btn-group { display: flex; gap: 12px; flex-wrap: wrap; align-items: center; }
+    button { padding: 10px 18px; border: none; border-radius: 8px; cursor: pointer; font-weight: bold; font-size: 0.76em; transition: 0.2s; }
+    .btn-primary { background: #1e3c72; color: white; }
+    .btn-primary:hover { background: #2a5298; }
+    .btn-secondary { background: #00b4db; color: white; }
+    .btn-secondary:hover { background: #0083b0; }
+    .btn-danger { background: #e53935; color: white; }
+    .btn-danger:hover { background: #c62828; }
+    .btn-add { background: #2e7d32; color: white; padding: 7px 14px; font-size: 0.72em; }
+    .btn-add:hover { background: #388e3c; }
+
+    .stats-info { margin-left: auto; display: flex; gap: 15px; font-size: 0.72em; font-weight: bold; background: var(--sub-bg); padding: 8px 14px; border-radius: 8px; border: 1px solid var(--border-color); flex-wrap: wrap; }
+    .stats-item span { color: #1e3c72; font-size: 0.9em; margin-left: 2px; }
+    body.dark-mode .stats-item span { color: #64b5f6; }
+    
+    .history-log { 
+      margin-bottom: 20px; 
+      padding: 16px; 
+      background: var(--card-bg);
+      border-radius: 10px;
+      border: 1px solid var(--border-color);
+    }
+    .log-header { margin-bottom: 10px; display: flex; justify-content: space-between; align-items: baseline; }
+    .log-header h3 { margin: 0; color: #1e3c72; border-left: 4px solid #1e3c72; padding-left: 8px; font-size: 0.93em; }
+    body.dark-mode .log-header h3 { color: #64b5f6; border-left-color: #64b5f6; }
+    .log-time { font-size: 0.68em; opacity: 0.7; }
+
+    table { width: 100%; border-collapse: collapse; margin-bottom: 15px; }
+    th, td { border: 1px solid var(--border-color); padding: 8px 6px; text-align: center; font-size: 0.76em; }
+    th { background: var(--sub-bg); color: #1e3c72; }
+    body.dark-mode th { color: #64b5f6; }
+
+    /* 对阵列表样式 */
+    .match-container { background: var(--sub-bg); border-radius: 10px; padding: 14px; border: 1px solid var(--border-color); }
+    .match-section-title { font-size: 0.85em; font-weight: bold; margin-bottom: 10px; color: #1e3c72; text-align: left; border-left: 3px solid #1e3c72; padding-left: 6px; }
+    body.dark-mode .match-section-title { color: #64b5f6; border-left-color: #64b5f6; }
+    
+    .match-grid { display: grid; grid-template-columns: repeat(auto-fill, minmax(320px, 1fr)); gap: 10px; }
+    .match-item {
+      display: flex;
+      align-items: center;
+      justify-content: space-between;
+      background: var(--card-bg);
+      border: 1px solid var(--border-color);
+      border-radius: 6px;
+      padding: 8px 10px;
+      font-size: 0.75em;
+    }
+    .match-team { flex: 1; display: flex; align-items: center; gap: 4px; }
+    .match-team.home { justify-content: flex-end; text-align: right; color: #e53935; }
+    .match-team.away { justify-content: flex-start; text-align: left; color: #1e88e5; }
+    
+    .score-input-box { display: flex; align-items: center; gap: 4px; margin: 0 8px; }
+    .score-input {
+      width: 32px;
+      height: 26px;
+      text-align: center;
+      font-weight: bold;
+      border: 1px solid var(--border-color);
+      border-radius: 4px;
+      font-size: 0.9em;
+      background: var(--sub-bg);
+      color: var(--text-color);
+    }
+    .score-input:disabled { opacity: 0.7; background: rgba(0,0,0,0.05); }
+    
+    .btn-match-save {
+      padding: 3px 8px;
+      font-size: 0.7em;
+      border-radius: 4px;
+      background: #1e3c72;
+      color: white;
+      border: none;
+      cursor: pointer;
+    }
+    .btn-match-save.saved { background: #2e7d32; }
+    .badge-group { font-size: 0.8em; padding: 2px 4px; border-radius: 4px; font-weight: normal; margin-right: 2px; }
+    .badge-a { background: #ffcdd2; color: #b71c1c; }
+    .badge-b { background: #bbdefb; color: #0d47a1; }
+  </style>
+</head>
+<body>
+
+  <div class="top-controls">
+    <button class="top-btn" id="toggle-bg-btn" onclick="toggleBackground()">🖼️ 隐藏背景图</button>
+    <button class="top-btn" id="toggle-theme-btn" onclick="toggleTheme()">🌙 暗黑模式</button>
+  </div>
+
+  <div class="bottom-controls">
+    <button class="btn-reset-all" onclick="resetAllPersistentData()">🔄 一键重置全部数据</button>
+  </div>
+
+  <div class="main-title-box">
+    <h1>⚽ 东阳市足球电竞协会抽签工具</h1>
+  </div>
+
+  <div class="card">
+    <div class="btn-group">
+      <button class="btn-primary" onclick="confirmAction('start')">🎲 开始全新抽签</button>
+      <button class="btn-secondary" onclick="confirmAction('continue')">🔄 继续抽签（保留剩余球队）</button>
+      <button class="btn-danger" onclick="clearHistory()">🗑️ 清空历史记录</button>
+      
+      <div class="stats-info">
+        <div class="stats-item">👥 参赛总人数：<span id="stat-player-count">0</span></div>
+        <div class="stats-item">⚽ 勾选球队总数：<span id="stat-selected-teams">0</span></div>
+        <div class="stats-item">🎯 剩余未选球队：<span id="stat-remaining-teams">0</span></div>
+      </div>
+    </div>
+  </div>
+
+  <div class="card">
+    <div class="section-title">抽签结果与比分录入</div>
+    <div id="results-container">
+      <p style="opacity: 0.7; text-align: center;">暂无抽签记录，请配置下方选手和球队后点击开始抽签。</p>
+    </div>
+  </div>
+
+  <div class="card">
+    <div class="section-title">1. 选择参赛选手</div>
+    <div class="add-form-container">
+      <input type="text" id="new-player-name" placeholder="请输入新选手姓名" style="flex: 1; max-width: 220px;">
+      <button class="btn-add" onclick="addNewPlayer()">➕ 添加选手</button>
+    </div>
+    <div class="checkbox-group" id="player-container"></div>
+  </div>
+
+  <div class="card">
+    <div class="section-title">
+      <span>2. 选择可选球队池</span>
+    </div>
+
+    <div class="add-form-container">
+      <input type="text" id="new-team-name" placeholder="请输入新球队名称" style="flex: 1; max-width: 200px;">
+      <select id="new-team-category">
+        <option value="国家队">国家队</option>
+        <option value="英超">英超</option>
+        <option value="意甲">意甲</option>
+        <option value="西甲">西甲</option>
+        <option value="其他" selected>其他</option>
+      </select>
+      <button class="btn-add" onclick="addNewTeam()">➕ 添加球队</button>
+    </div>
+
+    <div class="filter-container">
+      <span class="filter-title">球队分类筛选：</span>
+      <label><input type="checkbox" id="cat-all" value="all" checked onchange="toggleAllCategories(this)"> 全部球队</label>
+      <label><input type="checkbox" name="team-cat" value="国家队" checked onchange="onCategoryChange(this)"> 国家队</label>
+      <label><input type="checkbox" name="team-cat" value="英超" checked onchange="onCategoryChange(this)"> 英超</label>
+      <label><input type="checkbox" name="team-cat" value="意甲" checked onchange="onCategoryChange(this)"> 意甲</label>
+      <label><input type="checkbox" name="team-cat" value="西甲" checked onchange="onCategoryChange(this)"> 西甲</label>
+      <label><input type="checkbox" name="team-cat" value="其他" checked onchange="onCategoryChange(this)"> 其他</label>
+    </div>
+
+    <div class="checkbox-group" id="team-container"></div>
+  </div>
+
+  <script>
+    let defaultPlayersList = ["骚哥", "小贝", "大安", "小安", "行长", "小郑", "滔", "小天", "永刚", "马医生", "玩家1", "玩家2"];
+    let playersList = [...defaultPlayersList];
+    
+    const defaultTeamData = {
+      "巴西": { category: "国家队", logo: "https://flagcdn.com/w40/br.png" },
+      "阿根廷": { category: "国家队", logo: "https://flagcdn.com/w40/ar.png" },
+      "法国": { category: "国家队", logo: "https://flagcdn.com/w40/fr.png" },
+      "德国": { category: "国家队", logo: "https://flagcdn.com/w40/de.png" },
+      "英格兰": { category: "国家队", logo: "https://flagcdn.com/w40/gb-eng.png" },
+      "意大利": { category: "国家队", logo: "https://flagcdn.com/w40/it.png" },
+      "西班牙": { category: "国家队", logo: "https://flagcdn.com/w40/es.png" },
+      "葡萄牙": { category: "国家队", logo: "https://flagcdn.com/w40/pt.png" },
+      "比利时": { category: "国家队", logo: "https://flagcdn.com/w40/be.png" },
+      "阿森纳": { category: "英超", logo: "https://crests.football-data.org/57.png" },
+      "利物浦": { category: "英超", logo: "https://crests.football-data.org/64.png" },
+      "切尔西": { category: "英超", logo: "https://crests.football-data.org/61.png" },
+      "曼联": { category: "英超", logo: "https://crests.football-data.org/66.png" },
+      "曼城": { category: "英超", logo: "https://crests.football-data.org/65.png" },
+      "AC米兰": { category: "意甲", logo: "https://crests.football-data.org/98.png" },
+      "国际米兰": { category: "意甲", logo: "https://crests.football-data.org/108.png" },
+      "那不勒斯": { category: "意甲", logo: "https://crests.football-data.org/113.png" },
+      "皇家马德里": { category: "西甲", logo: "https://crests.football-data.org/86.png" },
+      "马德里竞技": { category: "西甲", logo: "https://crests.football-data.org/78.png" },
+      "巴塞罗那": { category: "西甲", logo: "https://crests.football-data.org/81.png" },
+      "巴黎圣日耳曼": { category: "其他", logo: "https://crests.football-data.org/524.png" },
+      "拜仁慕尼黑": { category: "其他", logo: "https://crests.football-data.org/5.png" }
+    };
+
+    let teamData = { ...defaultTeamData };
+    let teamsList = Object.keys(teamData);
+
+    let availableTeams = [];
+    let drawCount = 0;
+    let historyRecords = [];
+
+    let lastAuthorizedTime = 0;
+    const AUTH_DURATION = 60 * 1000;
+
+    function checkTeamAuth() {
+      const now = Date.now();
+      if (now - lastAuthorizedTime < AUTH_DURATION) return true;
+
+      const pwd = prompt("敏感操作需要验证密码（有效期60秒）：");
+      if (pwd === null) return false;
+      if (pwd === "2021") {
+        lastAuthorizedTime = Date.now();
+        return true;
+      } else {
+        alert("密码错误，操作无效！");
+        return false;
+      }
+    }
+
+    function saveCustomTeams() {
+      const customTeamsData = {};
+      teamsList.forEach(t => {
+        if (!defaultTeamData[t]) customTeamsData[t] = teamData[t];
+      });
+      localStorage.setItem('dy_custom_teams_data', JSON.stringify(customTeamsData));
+    }
+
+    function saveSelections() {
+      const selectedPlayers = Array.from(document.querySelectorAll('input[name="player"]:checked')).map(el => el.value);
+      const selectedTeams = Array.from(document.querySelectorAll('input[name="team"]:checked')).map(el => el.value);
+      localStorage.setItem('dy_selected_players', JSON.stringify(selectedPlayers));
+      localStorage.setItem('dy_selected_teams', JSON.stringify(selectedTeams));
+    }
+
+    function saveCategoryFilters() {
+      const selectedCats = getSelectedCategories();
+      localStorage.setItem('dy_selected_categories', JSON.stringify(selectedCats));
+    }
+
+    function saveHistory() {
+      localStorage.setItem('dy_draw_count', drawCount.toString());
+      localStorage.setItem('dy_history_records', JSON.stringify(historyRecords));
+    }
+
+    function saveAvailableTeams() {
+      localStorage.setItem('dy_available_teams', JSON.stringify(availableTeams));
+    }
+
+    function resetAllPersistentData() {
+      const pwd = prompt("确定要删除所有本地持久化数据并重置系统吗？请输入密码：");
+      if (pwd === null) return;
+      if (pwd !== "2021") {
+        alert("密码错误，操作已取消！");
+        return;
+      }
+
+      if (confirm("此操作将清空所有自定义球队、选中的勾选项、剩余球队池和抽签历史记录，且无法恢复。是否继续？")) {
+        localStorage.removeItem('dy_custom_teams_data');
+        localStorage.removeItem('dy_selected_players');
+        localStorage.removeItem('dy_selected_teams');
+        localStorage.removeItem('dy_selected_categories');
+        localStorage.removeItem('dy_draw_count');
+        localStorage.removeItem('dy_history_records');
+        localStorage.removeItem('dy_available_teams');
+
+        alert("已成功清除所有本地持久化数据！系统将重新加载。");
+        location.reload();
+      }
+    }
+
+    function toggleBackground() {
+      document.body.classList.toggle('no-bg');
+      const btn = document.getElementById('toggle-bg-btn');
+      btn.textContent = document.body.classList.contains('no-bg') ? '🖼️ 显示背景图' : '🖼️ 隐藏背景图';
+    }
+
+    function toggleTheme() {
+      document.body.classList.toggle('dark-mode');
+      const btn = document.getElementById('toggle-theme-btn');
+      btn.textContent = document.body.classList.contains('dark-mode') ? '☀️ 白天模式' : '🌙 暗黑模式';
+    }
+
+    function addNewPlayer() {
+      const input = document.getElementById('new-player-name');
+      const name = input.value.trim();
+      if (!name) { alert("请输入有效的选手姓名！"); return; }
+      if (playersList.includes(name)) { alert("该选手已存在！"); return; }
+      playersList.push(name);
+      
+      const playerBox = document.getElementById('player-container');
+      const label = document.createElement('label');
+      label.innerHTML = `<input type="checkbox" name="player" value="${name}" checked onchange="onPlayerCheckboxChange()"> ${name}`;
+      playerBox.appendChild(label);
+      
+      input.value = '';
+      updateAllStats();
+      saveSelections();
+    }
+
+    function addNewTeam() {
+      if (!checkTeamAuth()) return;
+
+      const nameInput = document.getElementById('new-team-name');
+      const catSelect = document.getElementById('new-team-category');
+      const name = nameInput.value.trim();
+      const category = catSelect.value;
+
+      if (!name) { alert("请输入有效的球队名称！"); return; }
+      if (teamsList.includes(name)) { alert("该球队已存在！"); return; }
+
+      teamData[name] = { category: category, logo: '' };
+      teamsList.push(name);
+
+      saveCustomTeams();
+      const currentSelected = Array.from(document.querySelectorAll('input[name="team"]:checked')).map(el => el.value);
+      currentSelected.push(name);
+
+      renderTeamList(currentSelected);
+      resetAvailableTeamsFromUI();
+      updateAllStats();
+      saveSelections();
+
+      nameInput.value = '';
+    }
+
+    function init() {
+      const savedCustomTeams = JSON.parse(localStorage.getItem('dy_custom_teams_data') || '{}');
+      Object.assign(teamData, savedCustomTeams);
+      teamsList = Object.keys(teamData);
+
+      const savedCategories = JSON.parse(localStorage.getItem('dy_selected_categories') || 'null');
+      if (savedCategories !== null) {
+        const catCbs = document.querySelectorAll('input[name="team-cat"]');
+        catCbs.forEach(cb => cb.checked = savedCategories.includes(cb.value));
+        const allChecked = Array.from(catCbs).every(cb => cb.checked);
+        document.getElementById('cat-all').checked = allChecked;
+      }
+
+      const savedPlayers = JSON.parse(localStorage.getItem('dy_selected_players') || '[]');
+      const savedTeams = JSON.parse(localStorage.getItem('dy_selected_teams') || 'null');
+
+      const playerBox = document.getElementById('player-container');
+      playerBox.innerHTML = playersList.map(p => {
+        const isChecked = savedPlayers.includes(p) ? 'checked' : '';
+        return `<label><input type="checkbox" name="player" value="${p}" ${isChecked} onchange="onPlayerCheckboxChange()"> ${p}</label>`;
+      }).join('');
+
+      renderTeamList(savedTeams);
+
+      const savedAvailable = JSON.parse(localStorage.getItem('dy_available_teams') || 'null');
+      if (savedAvailable !== null) {
+        availableTeams = savedAvailable;
+      } else {
+        resetAvailableTeamsFromUI();
+      }
+
+      drawCount = parseInt(localStorage.getItem('dy_draw_count') || '0', 10);
+      historyRecords = JSON.parse(localStorage.getItem('dy_history_records') || '[]');
+      renderAllResults();
+
+      updateAllStats();
+    }
+
+    function onPlayerCheckboxChange() {
+      updateAllStats();
+      saveSelections();
+    }
+
+    function getSelectedCategories() {
+      return Array.from(document.querySelectorAll('input[name="team-cat"]:checked')).map(el => el.value);
+    }
+
+    function renderTeamList(savedTeams = null) {
+      const selectedCats = getSelectedCategories();
+      const teamBox = document.getElementById('team-container');
+      
+      teamBox.innerHTML = teamsList.map(t => {
+        const item = teamData[t];
+        const isVisible = selectedCats.includes(item.category);
+        const isChecked = (savedTeams === null || savedTeams.includes(t)) ? 'checked' : '';
+        return `<label style="display: ${isVisible ? 'flex' : 'none'};" data-category="${item.category}">
+          <input type="checkbox" name="team" value="${t}" ${isChecked} onchange="onTeamCheckboxChange(this)"> 
+          <img src="${item.logo}" class="team-badge" alt="${t}" onerror="this.onerror=null; this.src=''; this.alt='⚽';">
+          <span>${t}</span>
+        </label>`;
+      }).join('');
+    }
+
+    function onTeamCheckboxChange(inputEl) {
+      if (!checkTeamAuth()) {
+        inputEl.checked = !inputEl.checked;
+        return;
+      }
+      resetAvailableTeamsFromUI();
+      updateAllStats();
+      saveSelections();
+    }
+
+    function toggleAllCategories(master) {
+      if (!checkTeamAuth()) {
+        master.checked = !master.checked;
+        return;
+      }
+      const catCbs = document.querySelectorAll('input[name="team-cat"]');
+      catCbs.forEach(cb => cb.checked = master.checked);
+      applyCategoryFilter();
+      saveCategoryFilters();
+    }
+
+    function onCategoryChange(inputEl) {
+      if (!checkTeamAuth()) {
+        inputEl.checked = !inputEl.checked;
+        return;
+      }
+      const catCbs = Array.from(document.querySelectorAll('input[name="team-cat"]'));
+      document.getElementById('cat-all').checked = catCbs.every(cb => cb.checked);
+      applyCategoryFilter();
+      saveCategoryFilters();
+    }
+
+    function applyCategoryFilter() {
+      const selectedCats = getSelectedCategories();
+      const labels = document.querySelectorAll('#team-container label');
+      labels.forEach(lbl => {
+        const cat = lbl.getAttribute('data-category');
+        lbl.style.display = selectedCats.includes(cat) ? 'flex' : 'none';
+      });
+      updateAllStats();
+    }
+
+    function resetAvailableTeamsFromUI() {
+      const checkedTeams = Array.from(document.querySelectorAll('input[name="team"]:checked')).map(el => el.value);
+      availableTeams = [...checkedTeams];
+      saveAvailableTeams();
+    }
+
+    function updateAllStats() {
+      const selectedPlayersCount = document.querySelectorAll('input[name="player"]:checked').length;
+      const selectedTeamsCount = document.querySelectorAll('input[name="team"]:checked').length;
+      
+      document.getElementById('stat-player-count').textContent = selectedPlayersCount;
+      document.getElementById('stat-selected-teams').textContent = selectedTeamsCount;
+      document.getElementById('stat-remaining-teams').textContent = availableTeams.length;
+    }
+
+    function shuffle(array) {
+      let arr = [...array];
+      for (let i = arr.length - 1; i > 0; i--) {
+        const j = Math.floor(Math.random() * (i + 1));
+        [arr[i], arr[j]] = [arr[j], arr[i]];
+      }
+      return arr;
+    }
+
+    function confirmAction(type) {
+      if (type === 'start') {
+        const pwd = prompt("开始全新抽签请输入密码：");
+        if (pwd === null) return;
+        if (pwd !== "2021") {
+          alert("密码错误，无法开始全新抽签！");
+          return;
+        }
+      }
+
+      const actionText = type === 'start' ? '开始全新抽签（将重置球队池）' : '继续下一轮抽签（从剩余球队池抽取）';
+      if (confirm(`确认要${actionText}吗？`)) {
+        handleDraw(type);
+      }
+    }
+
+    function getFormattedDateTime() {
+      const now = new Date();
+      const year = now.getFullYear();
+      const month = String(now.getMonth() + 1).padStart(2, '0');
+      const day = String(now.getDate()).padStart(2, '0');
+      const hours = String(now.getHours()).padStart(2, '0');
+      const minutes = String(now.getMinutes()).padStart(2, '0');
+      const seconds = String(now.getSeconds()).padStart(2, '0');
+      return `${year}-${month}-${day} ${hours}:${minutes}:${seconds}`;
+    }
+
+    /* ------------------- A组 vs B组 对阵与比分逻辑 ------------------- */
+    
+    // 生成 A组 vs B组 单循环对阵列表 (如 A1 vs B1, A1 vs B2 ...)
+    function generateCrossMatches(resA, resB) {
+      let matches = [];
+      for (let i = 0; i < resA.length; i++) {
+        for (let j = 0; j < resB.length; j++) {
+          matches.push({
+            id: `m_${i}_${j}`,
+            homeGroup: 'A',
+            homeCode: `A${i+1}`,
+            homePlayer: resA[i].player,
+            homeTeam: resA[i].team,
+            awayGroup: 'B',
+            awayCode: `B${j+1}`,
+            awayPlayer: resB[j].player,
+            awayTeam: resB[j].team,
+            homeScore: '',
+            awayScore: '',
+            saved: false
+          });
+        }
+      }
+      return matches;
+    }
+
+    // 计算包含所有选手的汇总统计（对决场次, 胜利, 平局, 失败, 总进球, 总失球, 净胜球, 积分）
+    function calculateSummaryStandings(resA, resB, matches) {
+      let stats = {};
+
+      resA.forEach((item, idx) => {
+        const code = `A${idx+1}`;
+        stats[code] = {
+          code: code,
+          group: 'A',
+          player: item.player,
+          team: item.team,
+          played: 0,
+          won: 0,
+          drawn: 0,
+          lost: 0,
+          gf: 0,
+          ga: 0,
+          gd: 0,
+          pts: 0
+        };
+      });
+
+      resB.forEach((item, idx) => {
+        const code = `B${idx+1}`;
+        stats[code] = {
+          code: code,
+          group: 'B',
+          player: item.player,
+          team: item.team,
+          played: 0,
+          won: 0,
+          drawn: 0,
+          lost: 0,
+          gf: 0,
+          ga: 0,
+          gd: 0,
+          pts: 0
+        };
+      });
+
+      (matches || []).forEach(m => {
+        if (m.saved && m.homeScore !== '' && m.awayScore !== '') {
+          const hScore = parseInt(m.homeScore, 10);
+          const aScore = parseInt(m.awayScore, 10);
+          const h = stats[m.homeCode];
+          const a = stats[m.awayCode];
+
+          if (h && a) {
+            h.played++;
+            a.played++;
+            h.gf += hScore;
+            h.ga += aScore;
+            a.gf += aScore;
+            a.ga += hScore;
+
+            if (hScore > aScore) {
+              h.won++;
+              h.pts += 3;
+              a.lost++;
+            } else if (hScore < aScore) {
+              a.won++;
+              a.pts += 3;
+              h.lost++;
+            } else {
+              h.drawn++;
+              a.drawn++;
+              h.pts += 1;
+              a.pts += 1;
+            }
+            h.gd = h.gf - h.ga;
+            a.gd = a.gf - a.ga;
+          }
+        }
+      });
+
+      return Object.values(stats).sort((a, b) => {
+        if (b.pts !== a.pts) return b.pts - a.pts;
+        if (b.gd !== a.gd) return b.gd - a.gd;
+        return b.gf - a.gf;
+      });
+    }
+
+    function handleDraw(type) {
+      const selectedPlayers = Array.from(document.querySelectorAll('input[name="player"]:checked')).map(el => el.value);
+      
+      if (selectedPlayers.length === 0) {
+        alert("请至少选择一位参赛选手！");
+        return;
+      }
+
+      if (type === 'start') resetAvailableTeamsFromUI();
+
+      if (availableTeams.length < selectedPlayers.length) {
+        alert(`剩余球队数量（${availableTeams.length} 支）不足以分配给每位玩家（需要 ${selectedPlayers.length} 支）！\n\n请重置球队池或减少参赛人数。`);
+        return;
+      }
+
+      const shuffledPlayers = shuffle(selectedPlayers);
+      const half = Math.ceil(shuffledPlayers.length / 2);
+      const teamAPlayers = shuffledPlayers.slice(0, half);
+      const teamBPlayers = shuffledPlayers.slice(half);
+
+      const shuffledTeams = shuffle(availableTeams);
+      const drawnTeams = shuffledTeams.slice(0, selectedPlayers.length);
+      availableTeams = shuffledTeams.slice(selectedPlayers.length);
+
+      saveAvailableTeams();
+      updateAllStats();
+
+      let resA = [];
+      let resB = [];
+      let teamIdx = 0;
+
+      teamAPlayers.forEach(p => resA.push({ player: p, team: drawnTeams[teamIdx++] }));
+      teamBPlayers.forEach(p => resB.push({ player: p, team: drawnTeams[teamIdx++] }));
+
+      drawCount++;
+      
+      historyRecords.unshift({
+        round: drawCount,
+        time: getFormattedDateTime(),
+        resA: resA,
+        resB: resB,
+        matches: generateCrossMatches(resA, resB)
+      });
+
+      saveHistory();
+      renderAllResults();
+    }
+
+    function saveMatchScore(round, matchIndex) {
+      const record = historyRecords.find(r => r.round === round);
+      if (!record || !record.matches) return;
+
+      const match = record.matches[matchIndex];
+      
+      if (match.saved) {
+        if (!checkTeamAuth()) return;
+        match.saved = false;
+        saveHistory();
+        renderAllResults();
+        return;
+      }
+
+      const homeInput = document.getElementById(`score_${round}_${matchIndex}_h`);
+      const awayInput = document.getElementById(`score_${round}_${matchIndex}_a`);
+
+      const hVal = homeInput.value.trim();
+      const aVal = awayInput.value.trim();
+
+      if (hVal === '' || aVal === '') {
+        alert("请输入完整的两队比分！");
+        return;
+      }
+
+      match.homeScore = parseInt(hVal, 10);
+      match.awayScore = parseInt(aVal, 10);
+      match.saved = true;
+
+      saveHistory();
+      renderAllResults();
+    }
+
+    function renderAllResults() {
+      const container = document.getElementById('results-container');
+      if (historyRecords.length === 0) {
+        container.innerHTML = `<p style="opacity: 0.7; text-align: center;">暂无抽签记录，请配置下方选手和球队后点击开始抽签。</p>`;
+        return;
+      }
+
+      container.innerHTML = historyRecords.map(record => {
+        // 数据升级兼容逻辑
+        if (!record.matches) {
+          record.matches = generateCrossMatches(record.resA, record.resB);
+        }
+
+        const summary = calculateSummaryStandings(record.resA, record.resB, record.matches);
+
+        return `<div class="history-log" id="draw-card-${record.round}">
+          <div class="log-header">
+            <h3>第 ${record.round} 轮抽签及比赛结果</h3>
+            <span class="log-time">⏱️ 抽签时间：${record.time}</span>
+          </div>
+
+          <!-- 标题栏下方：综合汇总表格 -->
+          <div style="margin-bottom: 15px;">
+            <div class="match-section-title">📊 战绩综合汇总榜</div>
+            <table>
+              <thead>
+                <tr>
+                  <th style="width: 40px;">排名</th>
+                  <th>选手(球队)</th>
+                  <th>对决场次</th>
+                  <th>胜利场次</th>
+                  <th>平局场次</th>
+                  <th>失败场次</th>
+                  <th>总进球数</th>
+                  <th>总失球数</th>
+                  <th>净胜球</th>
+                  <th>积分</th>
+                </tr>
+              </thead>
+              <tbody>
+                ${summary.map((st, idx) => `<tr>
+                  <td><b>${idx + 1}</b></td>
+                  <td>
+                    <span class="badge-group ${st.group === 'A' ? 'badge-a' : 'badge-b'}">${st.group}组</span>
+                    <b>${st.player}</b> <span style="font-size:0.85em; opacity:0.8;">(${st.team})</span>
+                  </td>
+                  <td>${st.played}</td>
+                  <td style="color:#2e7d32; font-weight:bold;">${st.won}</td>
+                  <td style="color:#ed6c02; font-weight:bold;">${st.drawn}</td>
+                  <td style="color:#d32f2f; font-weight:bold;">${st.lost}</td>
+                  <td>${st.gf}</td>
+                  <td>${st.ga}</td>
+                  <td>${st.gd > 0 ? '+' + st.gd : st.gd}</td>
+                  <td><b style="color:#1e3c72; font-size:1.1em;">${st.pts}</b></td>
+                </tr>`).join('')}
+              </tbody>
+            </table>
+          </div>
+
+          <!-- A组 vs B组 自动生成单循环对阵框 -->
+          <div class="match-container">
+            <div class="match-section-title">⚔️ A组 vs B组 单循环对阵列表（手动录入比分）</div>
+            <div class="match-grid">
+              ${record.matches.map((m, idx) => `
+                <div class="match-item">
+                  <div class="match-team home">
+                    <span class="badge-group badge-a">A</span>
+                    <b>${m.homePlayer}</b> <span style="font-size:0.85em; opacity:0.8;">(${m.homeTeam})</span>
+                  </div>
+                  <div class="score-input-box">
+                    <input type="number" min="0" max="99" id="score_${record.round}_${idx}_h" class="score-input" value="${m.homeScore !== '' ? m.homeScore : ''}" ${m.saved ? 'disabled' : ''}>
+                    <span>:</span>
+                    <input type="number" min="0" max="99" id="score_${record.round}_${idx}_a" class="score-input" value="${m.awayScore !== '' ? m.awayScore : ''}" ${m.saved ? 'disabled' : ''}>
+                    <button class="btn-match-save ${m.saved ? 'saved' : ''}" onclick="saveMatchScore(${record.round}, ${idx})">
+                      ${m.saved ? '🔒 修改' : '💾 保存'}
+                    </button>
+                  </div>
+                  <div class="match-team away">
+                    <b>${m.awayPlayer}</b> <span style="font-size:0.85em; opacity:0.8;">(${m.awayTeam})</span>
+                    <span class="badge-group badge-b">B</span>
+                  </div>
+                </div>
+              `).join('')}
+            </div>
+          </div>
+        </div>`;
+      }).join('');
+    }
+
+    function clearHistory() {
+      const pwd = prompt("清空历史记录请输入密码：");
+      if (pwd === null) return;
+      if (pwd !== "2021") {
+        alert("密码错误，无法清空历史记录！");
+        return;
+      }
+
+      if (confirm("确定要删除所有抽签历史记录及比分数据吗？")) {
+        drawCount = 0;
+        historyRecords = [];
+        saveHistory();
+        renderAllResults();
+        resetAvailableTeamsFromUI();
+        updateAllStats();
+      }
+    }
+
+    window.onload = init;
+  </script>
+
+</body>
+</html>
