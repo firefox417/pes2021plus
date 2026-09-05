@@ -65,7 +65,7 @@
         body {
             font-family: -apple-system, BlinkMacSystemFont, 'Segoe UI', Roboto, 'Helvetica Neue', Arial, sans-serif;
             margin: 0;
-            padding: 24px;
+            padding: 16px;
             background-color: var(--bg-color);
             background-image: url('https://t14.baidu.com/it/u=2648855751,2313181335&fm=225&app=113&f=JPEG?w=3348&h=1915&s=55C7D9BA0A1103F94699D8B603005015');
             background-size: cover;
@@ -75,6 +75,12 @@
             transition: background-color 0.3s ease;
         }
 
+        @media (max-width: 768px) {
+            body {
+                padding: 8px;
+            }
+        }
+
         body.hide-bg {
             background-image: none !important;
         }
@@ -82,7 +88,7 @@
         .container {
             display: flex;
             flex-direction: column;
-            gap: 20px;
+            gap: 16px;
             max-width: 1400px;
             margin: 0 auto;
         }
@@ -91,7 +97,7 @@
             display: flex;
             justify-content: space-between;
             align-items: center;
-            padding: 14px 24px;
+            padding: 12px 16px;
             background: var(--header-bg);
             backdrop-filter: blur(8px);
             border-radius: 12px;
@@ -99,12 +105,15 @@
             border: 1px solid var(--border-color);
             box-sizing: border-box;
             width: 100%;
+            flex-wrap: wrap;
+            gap: 10px;
         }
 
         .top-left-controls {
             display: flex;
             align-items: center;
-            gap: 16px;
+            gap: 12px;
+            flex-wrap: wrap;
         }
 
         .theme-selector {
@@ -129,25 +138,49 @@
         .card {
             background: var(--card-bg);
             backdrop-filter: blur(8px);
-            padding: 20px 24px;
+            padding: 16px 20px;
             border-radius: 12px;
             box-shadow: 0 4px 6px -1px rgba(0,0,0,0.08);
             border: 1px solid var(--border-color);
             box-sizing: border-box;
             width: 100%;
+            position: relative;
+        }
+
+        @media (max-width: 768px) {
+            .card {
+                padding: 12px 14px;
+            }
+        }
+
+        .card-header-toggle {
+            display: flex;
+            justify-content: space-between;
+            align-items: center;
+            cursor: pointer;
+            user-select: none;
         }
 
         .card h3 {
             margin-top: 0;
-            margin-bottom: 16px;
-            font-size: 18px;
+            margin-bottom: 0;
+            font-size: 17px;
             color: var(--text-color);
             border-left: 4px solid var(--primary-color);
             padding-left: 10px;
         }
 
+        .collapse-content {
+            display: none;
+            margin-top: 16px;
+        }
+
+        .collapse-content.show {
+            display: block;
+        }
+
         button {
-            padding: 8px 16px;
+            padding: 8px 14px;
             border: none;
             border-radius: 6px;
             background: var(--primary-color);
@@ -156,11 +189,14 @@
             cursor: pointer;
             transition: all 0.2s ease;
             box-shadow: 0 1px 2px 0 rgba(0, 0, 0, 0.1);
+            font-size: 14px;
+            white-space: nowrap;
         }
 
         button:hover { opacity: 0.9; transform: translateY(-1px); }
         button.danger { background: var(--danger-color); }
         button.success { background: var(--success-color); }
+        button:disabled { opacity: 0.6; cursor: not-allowed; transform: none !important; }
 
         .btn-outline {
             background: transparent;
@@ -174,27 +210,27 @@
 
         .player-grid, .team-grid {
             display: grid;
-            grid-template-columns: repeat(auto-fill, minmax(130px, 1fr));
-            gap: 10px;
+            grid-template-columns: repeat(auto-fill, minmax(110px, 1fr));
+            gap: 8px;
             margin-top: 12px;
         }
 
         .team-grid {
-            grid-template-columns: repeat(auto-fill, minmax(160px, 1fr));
+            grid-template-columns: repeat(auto-fill, minmax(140px, 1fr));
         }
 
         .checkbox-item {
             display: inline-flex;
             align-items: center;
-            gap: 8px;
+            gap: 6px;
             background: var(--item-bg);
-            padding: 8px 12px;
+            padding: 6px 10px;
             border-radius: 8px;
             cursor: pointer;
             user-select: none;
             border: 1px solid var(--border-color);
             transition: all 0.2s;
-            font-size: 14px;
+            font-size: 13px;
         }
 
         .checkbox-item:hover {
@@ -214,6 +250,7 @@
             display: flex;
             gap: 8px;
             margin-bottom: 12px;
+            flex-wrap: wrap;
         }
 
         .add-team-box input {
@@ -223,25 +260,33 @@
             background: var(--item-bg);
             color: var(--text-color);
             outline: none;
-            width: 200px;
+            flex: 1;
+            min-width: 180px;
+        }
+
+        /* 移动端表格横向滚动容器适配 */
+        .table-responsive {
+            width: 100%;
+            overflow-x: auto;
+            -webkit-overflow-scrolling: touch;
+            margin-top: 12px;
+            border-radius: 8px;
+            border: 1px solid var(--border-color);
         }
 
         table {
             width: 100%;
             border-collapse: separate;
             border-spacing: 0;
-            margin-top: 12px;
-            border-radius: 8px;
-            overflow: hidden;
-            border: 1px solid var(--border-color);
+            min-width: 650px;
         }
 
         th, td {
             border-bottom: 1px solid var(--border-color);
             border-right: 1px solid var(--border-color);
-            padding: 10px 12px;
+            padding: 8px 10px;
             text-align: center;
-            font-size: 14px;
+            font-size: 13px;
         }
 
         th:last-child, td:last-child { border-right: none; }
@@ -253,28 +298,46 @@
             white-space: nowrap;
         }
 
-        input[type="number"] {
-            width: 55px;
-            padding: 5px;
-            text-align: center;
+        input[type="number"], input[type="text"] {
+            padding: 4px 6px;
             border: 1px solid var(--border-color);
             border-radius: 4px;
             background: var(--item-bg);
             color: var(--text-color);
+            outline: none;
+        }
+
+        input[type="number"] {
+            width: 48px;
+            text-align: center;
+        }
+
+        input[type="number"]:disabled {
+            background: rgba(0,0,0,0.08);
+            color: var(--text-muted);
+            cursor: not-allowed;
         }
 
         .info-stats {
             display: inline-flex;
-            gap: 12px;
+            gap: 8px;
             align-items: center;
             margin-left: auto;
-            font-size: 13px;
+            font-size: 12px;
+            flex-wrap: wrap;
+        }
+
+        @media (max-width: 768px) {
+            .info-stats {
+                margin-left: 0;
+                width: 100%;
+            }
         }
 
         .info-badge {
             background: rgba(37, 99, 235, 0.1);
             color: var(--primary-color);
-            padding: 5px 10px;
+            padding: 4px 8px;
             border-radius: 16px;
             border: 1px solid rgba(37, 99, 235, 0.2);
             font-weight: 600;
@@ -284,46 +347,54 @@
             background: var(--item-bg);
             border: 1px solid var(--border-color);
             border-radius: 10px;
-            padding: 16px;
-            margin-top: 16px;
+            padding: 12px;
+            margin-top: 14px;
         }
 
         .round-header {
             display: flex;
             justify-content: space-between;
             align-items: center;
-            margin-bottom: 10px;
+            margin-bottom: 8px;
+            flex-wrap: wrap;
+            gap: 6px;
         }
 
         .round-title {
             font-weight: bold;
-            font-size: 15px;
+            font-size: 14px;
             color: var(--primary-color);
         }
 
         .round-time {
-            font-size: 12px;
+            font-size: 11px;
             color: var(--text-muted);
             background: var(--card-bg);
-            padding: 4px 10px;
+            padding: 3px 8px;
             border-radius: 12px;
             border: 1px solid var(--border-color);
         }
 
+        .round-footer-action {
+            display: flex;
+            justify-content: flex-end;
+            margin-top: 10px;
+        }
+
         .formula-box {
-            margin-top: 16px;
-            padding: 14px 18px;
+            margin-top: 14px;
+            padding: 12px 14px;
             background: var(--item-bg);
             border: 1px solid var(--border-color);
             border-radius: 8px;
-            font-size: 13px;
-            line-height: 1.6;
+            font-size: 12px;
+            line-height: 1.5;
             color: var(--text-muted);
         }
 
         .formula-box h4 {
-            margin: 0 0 8px 0;
-            font-size: 14px;
+            margin: 0 0 6px 0;
+            font-size: 13px;
             color: var(--text-color);
             display: flex;
             align-items: center;
@@ -332,11 +403,11 @@
 
         .formula-box ul {
             margin: 0;
-            padding-left: 20px;
+            padding-left: 18px;
         }
 
         .formula-box li {
-            margin-bottom: 4px;
+            margin-bottom: 3px;
         }
 
         .formula-box li:last-child {
@@ -351,19 +422,23 @@
             justify-content: center;
             align-items: center;
             z-index: 2000;
+            padding: 16px;
+            box-sizing: border-box;
         }
 
         .modal-content {
             background: var(--card-bg);
             backdrop-filter: blur(12px);
-            padding: 24px;
+            padding: 20px;
             border-radius: 12px;
-            width: 320px;
+            width: 100%;
+            max-width: 320px;
             box-shadow: 0 20px 25px -5px rgba(0, 0, 0, 0.3);
             border: 1px solid var(--border-color);
+            box-sizing: border-box;
         }
 
-        .modal-content input[type="password"] {
+        .modal-content input[type="password"], .modal-content input[type="text"] {
             padding: 8px;
             border-radius: 4px;
             border: 1px solid var(--border-color);
@@ -378,13 +453,28 @@
             display: inline-flex;
             align-items: center;
             gap: 4px;
-            font-size: 12px;
+            font-size: 11px;
             color: var(--text-muted);
-            margin-left: 8px;
+            margin-left: 6px;
             cursor: pointer;
             background: rgba(0, 0, 0, 0.04);
-            padding: 2px 6px;
+            padding: 2px 4px;
             border-radius: 4px;
+            border: 1px solid var(--border-color);
+            white-space: nowrap;
+        }
+
+        .export-watermark-time {
+            display: none;
+            position: absolute;
+            top: 16px;
+            right: 24px;
+            font-size: 13px;
+            color: var(--text-muted);
+            font-weight: 500;
+            background: var(--item-bg);
+            padding: 3px 10px;
+            border-radius: 6px;
             border: 1px solid var(--border-color);
         }
     </style>
@@ -395,109 +485,125 @@
         <!-- 顶部标题栏 -->
         <div class="header">
             <div class="top-left-controls">
-                <button class="btn-outline" onclick="toggleBackground()">🖼️ 隐藏/显示背景</button>
+                <button class="btn-outline" onclick="toggleBackground()">🖼️ 背景切换</button>
                 <div class="theme-selector">
-                    🎨 风格主题：
+                    🎨 主题：
                     <select id="themeSelect" onchange="changeTheme(this.value)">
-                        <option value="light">经典白昼 (Light)</option>
-                        <option value="dark">赛博夜间 (Dark)</option>
-                        <option value="green">绿茵球场 (Green)</option>
-                        <option value="purple">欧冠极光 (Purple)</option>
+                        <option value="light">经典白昼</option>
+                        <option value="dark">赛博夜间</option>
+                        <option value="green">绿茵球场</option>
+                        <option value="purple">欧冠极光</option>
                     </select>
                 </div>
             </div>
-            <div style="font-size: 13px; color: var(--text-muted);">
-                刷新时间：<span id="updateTime">--</span>
+            <div style="font-size: 12px; color: var(--text-muted);">
+                刷新：<span id="updateTime">--</span>
             </div>
         </div>
 
         <!-- 模块 1：参赛玩家 -->
         <div class="card">
-            <h3>1. 参赛玩家选择</h3>
+            <h3 style="margin-bottom:12px;">1. 参赛玩家选择</h3>
             <div class="player-grid" id="playerList"></div>
         </div>
 
-        <!-- 模块 2：球队池与自定义输入 -->
+        <!-- 模块 2：球队池（默认收起） -->
         <div class="card">
-            <h3>2. 球队池选择 & 新增</h3>
-            <div class="add-team-box">
-                <input type="text" id="customTeamInput" placeholder="输入新球队/国家队名称">
-                <button onclick="addCustomTeam()">添加自定义球队</button>
+            <div class="card-header-toggle" onclick="toggleTeamListCollapse()">
+                <h3>2. 球队池选择 & 新增</h3>
+                <button class="btn-outline" id="teamToggleBtn" style="font-size: 12px; padding: 4px 10px;">展开球队列表 ▼</button>
             </div>
-            <div class="team-grid" id="teamList"></div>
+            <div class="collapse-content" id="teamListContainer">
+                <div class="add-team-box">
+                    <input type="text" id="customTeamInput" placeholder="输入新球队/国家队名称">
+                    <button onclick="addCustomTeam()">添加自定义球队</button>
+                </div>
+                <div class="team-grid" id="teamList"></div>
+            </div>
         </div>
 
-        <!-- 模块 3：抽签控制与对阵 -->
+        <!-- 模块 3 & 4：抽签控制与对阵（新增收放功能） -->
         <div class="card">
-            <h3>3 & 4. 抽签分配与比分录入</h3>
-            <div style="display:flex; gap:10px; align-items:center; flex-wrap:wrap; margin-bottom: 12px;">
-                <button onclick="resetTeamPoolOnly()" class="btn-outline">全新抽签</button>
-                <button onclick="drawTeams()">继续抽签</button>
-                <button onclick="settleAndExportImage()" class="success">结算 (导出图片)</button>
-                
-                <div class="info-stats">
-                    <span class="info-badge">玩家：<span id="statPlayerCount">0</span>人</span>
-                    <span class="info-badge">已选球队：<span id="statSelectedTeamCount">0</span>支</span>
-                    <span class="info-badge">剩余球队：<span id="statRemainingTeamCount">0</span>支</span>
-                </div>
+            <div class="card-header-toggle" onclick="toggleMatchAreaCollapse()">
+                <h3>3 & 4. 抽签分配与比分录入</h3>
+                <button class="btn-outline" id="matchToggleBtn" style="font-size: 12px; padding: 4px 10px;">收起面板 ▲</button>
             </div>
-            <div id="matchArea">
-                <p style="color:var(--text-muted); font-size:14px;">暂无对阵数据，请选择玩家和球队后点击抽签。</p>
+            <div class="collapse-content show" id="matchAreaContainer" style="margin-top: 14px;">
+                <div style="display:flex; gap:8px; align-items:center; flex-wrap:wrap; margin-bottom: 12px;">
+                    <button onclick="promptResetTeamPool()" class="btn-outline">全新抽签</button>
+                    <button onclick="drawTeams()">继续抽签</button>
+                    <button onclick="promptSettleAndExportImage()" class="success">今日结算(图片)</button>
+                    <button onclick="promptSettleAndExportCSV()" class="success">今日结算(表格)</button>
+                    
+                    <div class="info-stats">
+                        <span class="info-badge">玩家：<span id="statPlayerCount">0</span>人</span>
+                        <span class="info-badge">已选：<span id="statSelectedTeamCount">0</span>支</span>
+                        <span class="info-badge">剩余：<span id="statRemainingTeamCount">0</span>支</span>
+                    </div>
+                </div>
+                <div id="matchArea">
+                    <p style="color:var(--text-muted); font-size:13px;">暂无对阵数据，请选择玩家和球队后点击抽签。</p>
+                </div>
             </div>
         </div>
 
-        <!-- 模块 4：战绩综合汇总榜 -->
-        <div class="card" id="summarySection">
-            <div style="display:flex; justify-content:space-between; align-items:center;">
-                <h3>5. 战绩综合汇总榜</h3>
-                <div style="display:flex; gap:8px;">
-                    <button onclick="exportCSV('summaryTable', '战绩汇总榜')">导出 CSV</button>
-                    <button onclick="exportImage('summarySection', '战绩汇总榜')">导出图片</button>
+        <!-- 模块 5：今日战绩综合汇总榜 -->
+        <div class="card" id="todaySummarySection">
+            <div class="export-watermark-time" id="watermarkSummary"></div>
+            <div style="display:flex; justify-content:space-between; align-items:center; margin-bottom:12px; flex-wrap:wrap; gap:8px;">
+                <h3>5. 今日战绩综合汇总榜</h3>
+                <div style="display:flex; gap:6px;">
+                    <button onclick="exportCSV('todaySummaryTable', '今日战绩汇总榜')">导出 CSV</button>
+                    <button onclick="exportImage('todaySummarySection', '今日战绩汇总榜')">导出图片</button>
                 </div>
             </div>
-            <table id="summaryTable">
-                <thead>
-                    <tr>
-                        <th style="width: 7%;">排名</th>
-                        <th style="width: 15%;">玩家姓名</th>
-                        <th style="width: 10%;">场次</th>
-                        <th style="width: 8%;">胜</th>
-                        <th style="width: 8%;">平</th>
-                        <th style="width: 8%;">负</th>
-                        <th style="width: 11%;">总进球</th>
-                        <th style="width: 11%;">总失球</th>
-                        <th style="width: 11%;">净胜球</th>
-                        <th style="width: 11%;">积分</th>
-                    </tr>
-                </thead>
-                <tbody id="summaryBody"></tbody>
-            </table>
+            <div class="table-responsive">
+                <table id="todaySummaryTable">
+                    <thead>
+                        <tr>
+                            <th style="width: 7%;">排名</th>
+                            <th style="width: 15%;">玩家姓名</th>
+                            <th style="width: 10%;">场次</th>
+                            <th style="width: 8%;">胜</th>
+                            <th style="width: 8%;">平</th>
+                            <th style="width: 8%;">负</th>
+                            <th style="width: 11%;">总进球</th>
+                            <th style="width: 11%;">总失球</th>
+                            <th style="width: 11%;">净胜球</th>
+                            <th style="width: 11%;">积分</th>
+                        </tr>
+                    </thead>
+                    <tbody id="todaySummaryBody"></tbody>
+                </table>
+            </div>
         </div>
 
-        <!-- 模块 5：结算榜 -->
-        <div class="card" id="settlementSection">
-            <div style="display:flex; justify-content:space-between; align-items:center;">
-                <h3>6. 赛事奖金与贡献结算榜</h3>
-                <div style="display:flex; gap:8px;">
-                    <button onclick="exportCSV('settlementTable', '结算榜')">导出 CSV</button>
-                    <button onclick="exportImage('settlementSection', '赛事奖金与贡献结算榜')">导出图片</button>
-                    <button onclick="backupData()">备份数据</button>
+        <!-- 模块 6：今日赛事奖金与贡献结算榜 -->
+        <div class="card" id="todaySettlementSection">
+            <div class="export-watermark-time" id="watermarkSettlement"></div>
+            <div style="display:flex; justify-content:space-between; align-items:center; margin-bottom:12px; flex-wrap:wrap; gap:8px;">
+                <h3>6. 今日赛事奖金与贡献结算榜</h3>
+                <div style="display:flex; gap:6px;">
+                    <button onclick="exportCSV('todaySettlementTable', '今日结算榜')">导出 CSV</button>
+                    <button onclick="exportImage('todaySettlementSection', '今日赛事奖金与贡献结算榜', true)">导出图片</button>
                 </div>
             </div>
-            <table id="settlementTable">
-                <thead>
-                    <tr>
-                        <th style="width: 15%;">玩家姓名</th>
-                        <th style="width: 14%;">基础收入(元)</th>
-                        <th style="width: 14%;">基础支出(元)</th>
-                        <th style="width: 14%;">单场奖惩(元)</th>
-                        <th style="width: 14%;">特殊贡献(元)</th>
-                        <th style="width: 14%;">赛事贡献(元)</th>
-                        <th style="width: 15%;">净收益(元)</th>
-                    </tr>
-                </thead>
-                <tbody id="settlementBody"></tbody>
-            </table>
+            <div class="table-responsive">
+                <table id="todaySettlementTable">
+                    <thead>
+                        <tr>
+                            <th style="width: 15%;">玩家姓名</th>
+                            <th style="width: 14%;">基础收入(元)</th>
+                            <th style="width: 14%;">基础支出(元)</th>
+                            <th style="width: 14%;">单场奖惩(元)</th>
+                            <th style="width: 14%;">特殊贡献(元)</th>
+                            <th style="width: 14%;">赛事贡献(元)</th>
+                            <th style="width: 15%;">净收益(元)</th>
+                        </tr>
+                    </thead>
+                    <tbody id="todaySettlementBody"></tbody>
+                </table>
+            </div>
 
             <div class="formula-box">
                 <h4>🧮 结算计算方式说明</h4>
@@ -508,7 +614,7 @@
                             <li>每轮组间对决优先比较 <b>A组积分</b> 与 <b>B组积分</b>；积分相同则比较 <b>净胜球</b>；若净胜球仍相同，则当局收支均记为 0。（玩家2不参与得失且不计入组人数）</li>
                             <li>若玩家2场次勾选<b>“不比赛”</b>：该场不计算个人积分与进球，但玩家2的对手<b>仍计入当轮组内有效人数</b>参与结算均摊。</li>
                             <li>若 A组胜：A组个人收入 = A组得分 × 10 ÷ 当轮A组有效人数；B组个人支出 = A组得分 × 10 ÷ 当轮B组有效人数。</li>
-                            <li>若 B组胜：B组个人收入 = B组得分 × 10 ÷ 当轮B组有效人数；A组个人支出 = B组得分 × 10 ÷ 当轮A组有效人数。</li>
+                            <li>若 B组胜：B组个人收入 = B组得分 × 10 ÷ 当轮B组有效人数；A组个人支出 = A组得分 × 10 ÷ 当轮A组有效人数。</li>
                         </ul>
                     </li>
                     <li><b>B. 单场净胜球奖惩规则</b>：
@@ -523,29 +629,127 @@
             </div>
         </div>
 
+        <!-- 模块 7：历史战绩综合汇总榜 -->
+        <div class="card" id="summarySection">
+            <div style="display:flex; justify-content:space-between; align-items:center; margin-bottom:12px; flex-wrap:wrap; gap:8px;">
+                <h3>7. 历史战绩综合汇总榜</h3>
+                <div style="display:flex; gap:6px;">
+                    <button onclick="exportCSV('summaryTable', '历史战绩汇总榜')">导出 CSV</button>
+                    <button onclick="exportImage('summarySection', '历史战绩汇总榜')">导出图片</button>
+                </div>
+            </div>
+            <div class="table-responsive">
+                <table id="summaryTable">
+                    <thead>
+                        <tr>
+                            <th style="width: 7%;">排名</th>
+                            <th style="width: 15%;">玩家姓名</th>
+                            <th style="width: 10%;">场次</th>
+                            <th style="width: 8%;">胜</th>
+                            <th style="width: 8%;">平</th>
+                            <th style="width: 8%;">负</th>
+                            <th style="width: 11%;">总进球</th>
+                            <th style="width: 11%;">总失球</th>
+                            <th style="width: 11%;">净胜球</th>
+                            <th style="width: 11%;">积分</th>
+                        </tr>
+                    </thead>
+                    <tbody id="summaryBody"></tbody>
+                </table>
+            </div>
+        </div>
+
+        <!-- 模块 8：历史赛事奖金与贡献结算总榜 -->
+        <div class="card" id="settlementSection">
+            <div style="display:flex; justify-content:space-between; align-items:center; margin-bottom:12px; flex-wrap:wrap; gap:8px;">
+                <h3>8. 历史赛事奖金与贡献结算总榜</h3>
+                <div style="display:flex; gap:6px;">
+                    <button onclick="exportCSV('settlementTable', '历史结算榜')">导出 CSV</button>
+                    <button onclick="exportImage('settlementSection', '历史赛事奖金与贡献结算总榜')">导出图片</button>
+                </div>
+            </div>
+            <div class="table-responsive">
+                <table id="settlementTable">
+                    <thead>
+                        <tr>
+                            <th style="width: 15%;">玩家姓名</th>
+                            <th style="width: 14%;">基础收入(元)</th>
+                            <th style="width: 14%;">基础支出(元)</th>
+                            <th style="width: 14%;">单场奖惩(元)</th>
+                            <th style="width: 14%;">特殊贡献(元)</th>
+                            <th style="width: 14%;">赛事贡献(元)</th>
+                            <th style="width: 15%;">净收益(元)</th>
+                        </tr>
+                    </thead>
+                    <tbody id="settlementBody"></tbody>
+                </table>
+            </div>
+        </div>
+
         <!-- 重置系统按钮区域 -->
         <div class="card">
-            <div style="display: flex; justify-content: space-between; align-items: center;">
+            <div style="display: flex; justify-content: space-between; align-items: center; flex-wrap: wrap; gap: 10px;">
                 <div>
-                    <h4 style="margin: 0;">系统高级重置管理</h4>
-                    <span style="font-size: 12px; color: var(--text-muted);">重置所有历史比赛成绩与系统配置</span>
+                    <h4 style="margin: 0; font-size: 15px;">系统高级重置管理</h4>
+                    <span style="font-size: 11px; color: var(--text-muted);">重置所有历史比赛成绩与系统配置</span>
                 </div>
                 <button class="danger" onclick="openResetModal()">重置系统数据</button>
             </div>
         </div>
     </div>
 
-    <!-- 弹窗验证 -->
+    <!-- 弹窗验证：全新抽签密码验证（仅密码） -->
+    <div class="modal" id="resetTeamPoolModal">
+        <div class="modal-content">
+            <h4 style="margin-top:0;">安全密码验证</h4>
+            <p style="font-size:13px; color:var(--text-muted); margin-bottom:8px;">请输入操作密码：</p>
+            <input type="password" id="resetTeamPoolPass" placeholder="请输入密码">
+            <div style="margin-top:16px; display:flex; justify-content:flex-end; gap:8px;">
+                <button onclick="closeResetTeamPoolModal()" class="btn-outline">取消</button>
+                <button onclick="executeResetTeamPool()" class="success">确认重置球队池</button>
+            </div>
+        </div>
+    </div>
+
+    <!-- 弹窗验证：系统重置（需要管理员ID和密码） -->
     <div class="modal" id="resetModal">
         <div class="modal-content">
-            <h4 style="margin-top:0;">管理员权限验证</h4>
-            <input type="password" id="adminPass" placeholder="请输入密码">
+            <h4 style="margin-top:0;">管理员身份验证</h4>
+            <p style="font-size:13px; color:var(--text-muted); margin-bottom:8px;">请输入管理员身份与密码：</p>
+            <input type="text" id="adminUser" placeholder="管理员ID">
+            <input type="password" id="adminPass" placeholder="密码">
             <p style="font-size:13px; margin: 10px 0 5px 0;"><strong>选择重置项：</strong></p>
             <label style="font-size:13px;"><input type="checkbox" id="resetHistory" checked> 清除对局与历史成绩</label><br>
             <label style="font-size:13px;"><input type="checkbox" id="resetSettings"> 恢复玩家/球队默认选中状态</label>
             <div style="margin-top:16px; display:flex; justify-content:flex-end; gap:8px;">
-                <button onclick="closeResetModal()">取消</button>
+                <button onclick="closeResetModal()" class="btn-outline">取消</button>
                 <button onclick="executeReset()" class="danger">确认重置</button>
+            </div>
+        </div>
+    </div>
+
+    <!-- 弹窗验证：今日结算（图片）密码验证（仅密码） -->
+    <div class="modal" id="settleConfirmModal">
+        <div class="modal-content">
+            <h4 style="margin-top:0;">安全密码验证</h4>
+            <p style="font-size:13px; color:var(--text-muted); margin-bottom:8px;">请输入操作密码：</p>
+            <input type="password" id="settleAdminPass" placeholder="请输入密码">
+            <div style="margin-top:16px; display:flex; justify-content:flex-end; gap:8px;">
+                <button onclick="closeSettleModal()" class="btn-outline">取消</button>
+                <button onclick="executeSettleAndExportImage()" class="success">确认并结算导出</button>
+            </div>
+        </div>
+    </div>
+
+    <!-- 弹窗验证：今日结算（表格）密码验证（仅密码） -->
+    <div class="modal" id="settleCSVConfirmModal">
+        <div class="modal-content">
+            <h4 style="margin-top:0;">安全密码验证</h4>
+            <p style="font-size:13px; color:var(--text-muted); margin-bottom:8px;">请输入操作密码：</p>
+            <input type="password" id="settleCSVAdminPass" placeholder="请输入密码">
+            <div style="margin-top:16px; display:flex; justify-content:flex-end; gap:8px;">
+                <button onclick="closeSettleCSVModal()" class="btn-outline">取消</button>
+                <button onclick="executeSettleAndExportCSV()" class="success">确认并结算导出</button>
             </div>
         </div>
     </div>
@@ -553,9 +757,7 @@
 <script>
 const RAW_PLAYERS = ["小贝","大安","小安","骚哥","行长","马医生","小天","小郑","永刚","滔","玩家1","玩家2"];
 
-// 带国旗和队徽的映射字典
 const TEAM_MAP = {
-    // 国家队 (Emoji 国旗)
     "阿根廷": "🇦🇷 阿根廷",
     "巴西": "🇧🇷 巴西",
     "比利时": "🇧🇪 比利时",
@@ -565,8 +767,6 @@ const TEAM_MAP = {
     "西班牙": "🇪🇸 西班牙",
     "意大利": "🇮🇹 意大利",
     "英格兰": "🏴󠁧󠁢󠁥󠁮󠁧󠁿 英格兰",
-    
-    // 俱乐部 (网络高清队徽)
     "AC米兰": '<img src="https://media.api-sports.io/football/teams/489.png" class="team-logo"> AC米兰',
     "阿森纳": '<img src="https://media.api-sports.io/football/teams/42.png" class="team-logo"> 阿森纳',
     "巴塞罗那": '<img src="https://media.api-sports.io/football/teams/529.png" class="team-logo"> 巴塞罗那',
@@ -612,7 +812,8 @@ let store = {
     selectedTeams: [...dynamicTeams],
     remainingTeams: [...dynamicTeams],
     rounds: [], 
-    customContributions: {}
+    customContributions: {},
+    todayCustomContributions: {}
 };
 
 function toggleBackground() {
@@ -635,6 +836,30 @@ function changeTheme(val) {
     saveStorage();
 }
 
+function toggleTeamListCollapse() {
+    const container = document.getElementById('teamListContainer');
+    const btn = document.getElementById('teamToggleBtn');
+    if (container.classList.contains('show')) {
+        container.classList.remove('show');
+        btn.innerText = '展开球队列表 ▼';
+    } else {
+        container.classList.add('show');
+        btn.innerText = '收起球队列表 ▲';
+    }
+}
+
+function toggleMatchAreaCollapse() {
+    const container = document.getElementById('matchAreaContainer');
+    const btn = document.getElementById('matchToggleBtn');
+    if (container.classList.contains('show')) {
+        container.classList.remove('show');
+        btn.innerText = '展开面板 ▼';
+    } else {
+        container.classList.add('show');
+        btn.innerText = '收起面板 ▲';
+    }
+}
+
 function loadStorage() {
     try {
         const data = localStorage.getItem('pes_app_data');
@@ -643,7 +868,10 @@ function loadStorage() {
             if (parsed.matches && !parsed.rounds) {
                 parsed.rounds = [{
                     timestamp: new Date().toLocaleString(),
-                    matches: parsed.matches
+                    dateStr: new Date().toISOString().split('T')[0],
+                    matches: parsed.matches,
+                    submitted: false,
+                    settledTime: null
                 }];
                 delete parsed.matches;
             }
@@ -748,13 +976,22 @@ function toggleTeam(t) {
     saveStorage();
 }
 
-function resetTeamPoolOnly() {
-    const pwd = prompt("全新抽签需要输入管理员密码：");
-    if (pwd !== "2021") { alert("密码错误！"); return; }
-    if (!confirm("确定要重置剩余球队池吗？所有勾选球队将恢复可选。")) return;
+function promptResetTeamPool() {
+    document.getElementById('resetTeamPoolPass').value = '';
+    document.getElementById('resetTeamPoolModal').style.display = 'flex';
+}
 
+function closeResetTeamPoolModal() {
+    document.getElementById('resetTeamPoolModal').style.display = 'none';
+}
+
+function executeResetTeamPool() {
+    const pwd = document.getElementById('resetTeamPoolPass').value;
+    if (pwd !== "2021") { alert("密码错误！"); return; }
+    
     store.remainingTeams = [...store.selectedTeams];
     saveStorage();
+    closeResetTeamPoolModal();
     alert("球队池已恢复，可继续抽签！");
 }
 
@@ -787,9 +1024,13 @@ function drawTeams() {
     }
 
     const nowStr = new Date().toLocaleString();
+    const todayStr = new Date().toISOString().split('T')[0];
     store.rounds.push({
         timestamp: nowStr,
-        matches: roundMatches
+        dateStr: todayStr,
+        matches: roundMatches,
+        submitted: false,
+        settledTime: null
     });
 
     saveStorage();
@@ -797,35 +1038,123 @@ function drawTeams() {
     calculateAll();
 }
 
-function settleAndExportImage() {
-    const target = document.getElementById('settlementSection');
+function promptSettleAndExportImage() {
+    document.getElementById('settleAdminPass').value = '';
+    document.getElementById('settleConfirmModal').style.display = 'flex';
+}
+
+function closeSettleModal() {
+    document.getElementById('settleConfirmModal').style.display = 'none';
+}
+
+function executeSettleAndExportImage() {
+    const pwd = document.getElementById('settleAdminPass').value;
+    if (pwd !== '2021') {
+        alert("密码错误！");
+        return;
+    }
+    closeSettleModal();
+
+    const target = document.getElementById('todaySettlementSection');
     if (target) {
         target.scrollIntoView({ behavior: 'smooth' });
     }
-    exportImage('settlementSection', '赛事奖金与贡献结算榜');
+
+    if (typeof html2canvas === 'undefined') {
+        alert("图片导出库加载中，请稍后再试！");
+        return;
+    }
+
+    const currentSettleTimeStr = new Date().toLocaleString();
+    const watermarkEl = document.getElementById('watermarkSettlement');
+    if (watermarkEl) {
+        watermarkEl.innerText = `结算时间: ${currentSettleTimeStr}`;
+        watermarkEl.style.display = 'block';
+    }
+
+    html2canvas(target).then(canvas => {
+        if (watermarkEl) {
+            watermarkEl.style.display = 'none';
+        }
+
+        let link = document.createElement('a');
+        link.download = '今日赛事奖金与贡献结算榜.png';
+        link.href = canvas.toDataURL();
+        link.click();
+
+        markRoundsAsSettled(currentSettleTimeStr);
+    }).catch(err => {
+        if (watermarkEl) {
+            watermarkEl.style.display = 'none';
+        }
+        console.error("图片导出失败", err);
+    });
+}
+
+function promptSettleAndExportCSV() {
+    document.getElementById('settleCSVAdminPass').value = '';
+    document.getElementById('settleCSVConfirmModal').style.display = 'flex';
+}
+
+function closeSettleCSVModal() {
+    document.getElementById('settleCSVConfirmModal').style.display = 'none';
+}
+
+function executeSettleAndExportCSV() {
+    const pwd = document.getElementById('settleCSVAdminPass').value;
+    if (pwd !== '2021') {
+        alert("密码错误！");
+        return;
+    }
+    closeSettleCSVModal();
+
+    const currentSettleTimeStr = new Date().toLocaleString();
+    exportCSV('todaySettlementTable', '今日赛事奖金与贡献结算榜');
+    markRoundsAsSettled(currentSettleTimeStr);
+}
+
+function markRoundsAsSettled(currentSettleTimeStr) {
+    let hasNewUnsettled = false;
+    store.rounds.forEach(r => {
+        if (r.submitted && !r.settledTime) {
+            r.settledTime = currentSettleTimeStr;
+            hasNewUnsettled = true;
+        }
+    });
+
+    if (hasNewUnsettled) {
+        saveStorage();
+        calculateAll();
+        renderMatches();
+    }
 }
 
 function renderMatches() {
+    const matchArea = document.getElementById('matchArea');
+
     if (!store.rounds || store.rounds.length === 0) {
-        document.getElementById('matchArea').innerHTML = '<p style="color:var(--text-muted); font-size:14px;">暂无对阵数据，请选择玩家和球队后点击抽签。</p>';
+        matchArea.innerHTML = '<p style="color:var(--text-muted); font-size:13px;">暂无对阵数据，请选择玩家和球队后点击抽签。</p>';
         return;
     }
 
     let html = '';
     for (let roundIdx = store.rounds.length - 1; roundIdx >= 0; roundIdx--) {
         const round = store.rounds[roundIdx];
+        const isSubmitted = round.submitted || false;
+
         html += `
             <div class="round-box">
                 <div class="round-header">
-                    <span class="round-title">第 ${roundIdx + 1} 轮抽签结果</span>
+                    <span class="round-title">第 ${roundIdx + 1} 轮抽签结果 ${round.settledTime ? `<span style="font-size:11px; color:var(--success-color); font-weight:normal;">(已结算：${round.settledTime})</span>` : ''}</span>
                     <span class="round-time">🕒 抽签时间: ${round.timestamp}</span>
                 </div>
-                <table>
-                    <tr>
-                        <th style="width: 40%;">A组 (玩家 & 球队)</th>
-                        <th style="width: 25%;">比分录入</th>
-                        <th style="width: 35%;">B组 (玩家 & 球队)</th>
-                    </tr>
+                <div class="table-responsive">
+                    <table>
+                        <tr>
+                            <th style="width: 38%;">A组 (玩家 & 球队)</th>
+                            <th style="width: 24%;">比分录入</th>
+                            <th style="width: 38%;">B组 (玩家 & 球队)</th>
+                        </tr>
         `;
 
         round.matches.forEach((m, mIdx) => {
@@ -834,21 +1163,21 @@ function renderMatches() {
 
             html += `
                 <tr>
-                    <td style="text-align: right; padding-right: 15px;">
+                    <td style="text-align: right; padding-right: 8px;">
                         <b>A${mIdx+1}:</b> ${m.pA} 
                         <span>(${getTeamDisplay(m.tA)})</span>
                     </td>
                     <td>
-                        <input type="number" min="0" value="${m.scoreA !== null ? m.scoreA : ''}" onchange="updateScore(${roundIdx}, ${mIdx}, 'A', this.value)">
-                        <span style="margin:0 4px;">:</span>
-                        <input type="number" min="0" value="${m.scoreB !== null ? m.scoreB : ''}" onchange="updateScore(${roundIdx}, ${mIdx}, 'B', this.value)">
+                        <input type="number" class="score-input" data-round="${roundIdx}" data-match="${mIdx}" data-group="A" min="0" value="${m.scoreA !== null ? m.scoreA : ''}" ${isSubmitted ? 'disabled' : ''}>
+                        <span style="margin:0 2px;">:</span>
+                        <input type="number" class="score-input" data-round="${roundIdx}" data-match="${mIdx}" data-group="B" min="0" value="${m.scoreB !== null ? m.scoreB : ''}" ${isSubmitted ? 'disabled' : ''}>
                     </td>
-                    <td style="text-align: left; padding-left: 15px;">
+                    <td style="text-align: left; padding-left: 8px;">
                         <span>(${getTeamDisplay(m.tB)})</span> 
                         ${m.pB} <b>:B${mIdx+1}</b>
                         ${hasP2 ? `
                             <label class="skip-match-label" title="选中后该场不计积分，但玩家2的对手计入当轮有效人数">
-                                <input type="checkbox" ${isSkipped ? 'checked' : ''} onchange="toggleSkipMatch(${roundIdx}, ${mIdx}, this.checked)">
+                                <input type="checkbox" class="skip-input" data-round="${roundIdx}" data-match="${mIdx}" ${isSkipped ? 'checked' : ''} ${isSubmitted ? 'disabled' : ''}>
                                 🚫不比赛
                             </label>
                         ` : ''}
@@ -858,40 +1187,84 @@ function renderMatches() {
         });
 
         html += `</table></div>`;
+        
+        html += `
+            <div class="round-footer-action">
+                ${isSubmitted ? 
+                    `<span style="font-size: 12px; color: var(--success-color); font-weight: bold; display: flex; align-items: center; gap: 4px;">✅ 本轮比分已提交并锁定</span>` :
+                    `<button class="success" onclick="confirmAndSubmitRoundScores(${roundIdx})" style="font-size: 13px; padding: 6px 14px; font-weight: bold;">💾 提交第 ${roundIdx + 1} 轮比分</button>`
+                }
+            </div>
+        </div>`;
     }
 
-    document.getElementById('matchArea').innerHTML = html;
+    matchArea.innerHTML = html;
 }
 
-function updateScore(roundIdx, mIdx, group, val) {
-    let score = val === '' ? null : parseInt(val);
-    if (group === 'A') store.rounds[roundIdx].matches[mIdx].scoreA = score;
-    if (group === 'B') store.rounds[roundIdx].matches[mIdx].scoreB = score;
+function confirmAndSubmitRoundScores(roundIdx) {
+    if (!confirm(`⚠️ 提示：提交并锁定比分后将无法直接修改，确认要提交第 ${roundIdx + 1} 轮比分吗？`)) {
+        return;
+    }
+    submitRoundScores(roundIdx);
+}
+
+function submitRoundScores(roundIdx) {
+    const inputs = document.querySelectorAll(`.score-input[data-round="${roundIdx}"]`);
+    let valid = true;
+
+    inputs.forEach(input => {
+        const mIdx = parseInt(input.getAttribute('data-match'));
+        const group = input.getAttribute('data-group');
+        const val = input.value.trim();
+        const score = val === '' ? null : parseInt(val);
+
+        if (score === null || isNaN(score)) {
+            valid = false;
+        }
+
+        if (group === 'A') {
+            store.rounds[roundIdx].matches[mIdx].scoreA = score;
+        } else if (group === 'B') {
+            store.rounds[roundIdx].matches[mIdx].scoreB = score;
+        }
+    });
+
+    if (!valid) {
+        if (!confirm("检测到有未填写的比分（将视为0分处理），确定要提交并永久锁定本轮吗？")) {
+            return;
+        }
+    }
+
+    const skips = document.querySelectorAll(`.skip-input[data-round="${roundIdx}"]`);
+    skips.forEach(skip => {
+        const mIdx = parseInt(skip.getAttribute('data-match'));
+        store.rounds[roundIdx].matches[mIdx].skipMatch = skip.checked;
+    });
+
+    store.rounds[roundIdx].submitted = true;
+    store.rounds[roundIdx].dateStr = new Date().toISOString().split('T')[0];
+
     saveStorage();
+    renderMatches();
     calculateAll();
+    alert(`第 ${roundIdx + 1} 轮比分已成功提交并锁定！`);
 }
 
-function toggleSkipMatch(roundIdx, mIdx, checked) {
-    if (store.rounds[roundIdx] && store.rounds[roundIdx].matches[mIdx]) {
-        store.rounds[roundIdx].matches[mIdx].skipMatch = checked;
-        saveStorage();
-        calculateAll();
-    }
-}
-
-function calculateAll() {
+function processStats(filterFn) {
     let stats = {};
     DEFAULT_PLAYERS.forEach(p => {
         stats[p] = { name: p, played: 0, win: 0, draw: 0, loss: 0, gf: 0, ga: 0, gd: 0, pts: 0, baseInc: 0, baseExp: 0, bonus: 0, contribution: 0 };
     });
 
-    if (!store.rounds) store.rounds = [];
+    if (!store.rounds) return stats;
 
     store.rounds.forEach(round => {
+        if (!round.submitted) return;
+        if (filterFn && !filterFn(round)) return;
+
         let sumPtsA = 0, sumPtsB = 0;
         let sumGDA = 0, sumGDB = 0;
         let validCountA = 0, validCountB = 0;
-        
         let winsA = 0, winsB = 0;
         let validMatchesCount = 0;
 
@@ -923,7 +1296,7 @@ function calculateAll() {
                     sumGDA += (sA - sB);
                 }
                 if (m.pB !== "玩家2") {
-                    if (sB > sA) sumPtsB += 3; else if (sA === sB) sumPtsB += 1;
+                    if (sB > sA) sumPtsB += 3; else if (sB === sA) sumPtsB += 1;
                     sumGDB += (sB - sA);
                 }
 
@@ -989,15 +1362,30 @@ function calculateAll() {
         });
     });
 
-    renderSummaryTable(stats);
-    renderSettlementTable(stats);
+    return stats;
 }
 
-function renderSummaryTable(stats) {
+function calculateAll() {
+    let todayStats = processStats(r => !r.settledTime);
+    renderSummaryTable('todaySummaryTable', todaySummaryBody, todayStats);
+    renderSettlementTable('todaySettlementTable', todaySettlementBody, todayStats, true);
+
+    let allStats = processStats(null);
+    renderSummaryTable('summaryTable', summaryBody, allStats);
+    renderSettlementTable('settlementTable', settlementBody, allStats, false);
+}
+
+function renderSummaryTable(tableId, tbodyEl, stats) {
     let list = Object.values(stats).filter(s => store.selectedPlayers.includes(s.name));
     list.sort((a, b) => b.pts - a.pts || b.gd - a.gd || b.gf - a.gf);
 
-    document.getElementById('summaryBody').innerHTML = list.map((s, idx) => `
+    let tbody = tbodyEl;
+    if (typeof tbodyEl === 'string') {
+        tbody = document.getElementById(tbodyEl);
+    }
+    if (!tbody) return;
+
+    tbody.innerHTML = list.map((s, idx) => `
         <tr>
             <td>${idx + 1}</td>
             <td><b>${s.name}</b></td>
@@ -1013,19 +1401,27 @@ function renderSummaryTable(stats) {
     `).join('');
 }
 
-function renderSettlementTable(stats) {
+function renderSettlementTable(tableId, tbodyEl, stats, isToday) {
     let list = Object.values(stats).filter(s => store.selectedPlayers.includes(s.name) && s.name !== "玩家2");
 
-    document.getElementById('settlementBody').innerHTML = list.map(s => {
-        let customVal = store.customContributions[s.name] || 0;
+    let tbody = tbodyEl;
+    if (typeof tbodyEl === 'string') {
+        tbody = document.getElementById(tbodyEl);
+    }
+    if (!tbody) return;
+
+    tbody.innerHTML = list.map(s => {
+        let customContribMap = isToday ? store.todayCustomContributions : store.customContributions;
+        let customVal = customContribMap[s.name] || 0;
         let netProfit = (s.baseInc - s.baseExp + s.bonus - customVal - s.contribution).toFixed(1);
+        
         return `
             <tr>
                 <td><b>${s.name}</b></td>
                 <td>${s.baseInc.toFixed(1)}</td>
                 <td>${s.baseExp.toFixed(1)}</td>
                 <td>${s.bonus}</td>
-                <td><input type="number" value="${customVal}" onchange="updateCustomContrib('${s.name}', this.value)"></td>
+                <td><input type="number" value="${customVal}" onchange="updateCustomContrib('${s.name}', this.value, ${isToday})"></td>
                 <td><span style="color:var(--danger-color); font-weight:bold;">${s.contribution}</span></td>
                 <td><b style="color:${netProfit >= 0 ? 'var(--success-color)' : 'var(--danger-color)'}">${netProfit}</b></td>
             </tr>
@@ -1033,25 +1429,36 @@ function renderSettlementTable(stats) {
     }).join('');
 }
 
-function updateCustomContrib(player, val) {
-    store.customContributions[player] = parseFloat(val) || 0;
+function updateCustomContrib(player, val, isToday) {
+    if (isToday) {
+        store.todayCustomContributions[player] = parseFloat(val) || 0;
+    } else {
+        store.customContributions[player] = parseFloat(val) || 0;
+    }
     saveStorage();
     calculateAll();
 }
 
 function openResetModal() { 
+    document.getElementById('adminUser').value = '';
     document.getElementById('adminPass').value = '';
     document.getElementById('resetModal').style.display = 'flex'; 
 }
 function closeResetModal() { document.getElementById('resetModal').style.display = 'none'; }
 
 function executeReset() {
+    const user = document.getElementById('adminUser').value.trim();
     const p = document.getElementById('adminPass').value;
-    if (p !== '2021') { alert("密码错误！"); return; }
+    
+    if (user !== 'pes' || p !== '2021') { 
+        alert("管理员身份或密码错误！"); 
+        return; 
+    }
 
     if (document.getElementById('resetHistory').checked) {
         store.rounds = [];
         store.customContributions = {};
+        store.todayCustomContributions = {};
         store.remainingTeams = [...store.selectedTeams];
     }
     if (document.getElementById('resetSettings').checked) {
@@ -1085,25 +1492,39 @@ function exportCSV(tableId, filename) {
     downloadLink.click();
 }
 
-function exportImage(elementId, filename) {
+function exportImage(elementId, filename, isSettlementCard = false) {
     if (typeof html2canvas === 'undefined') {
         alert("图片导出库加载中，请稍后再试！");
         return;
     }
+    
+    let watermarkEl = null;
+    if (elementId === 'todaySettlementSection') {
+        watermarkEl = document.getElementById('watermarkSettlement');
+    } else if (elementId === 'todaySummarySection') {
+        watermarkEl = document.getElementById('watermarkSummary');
+    }
+
+    let timeText = new Date().toLocaleString();
+    if (watermarkEl) {
+        watermarkEl.innerText = `时间: ${timeText}`;
+        watermarkEl.style.display = 'block';
+    }
+
     html2canvas(document.getElementById(elementId)).then(canvas => {
+        if (watermarkEl) {
+            watermarkEl.style.display = 'none';
+        }
         let link = document.createElement('a');
         link.download = `${filename}.png`;
         link.href = canvas.toDataURL();
         link.click();
+    }).catch(err => {
+        if (watermarkEl) {
+            watermarkEl.style.display = 'none';
+        }
+        console.error("图片导出失败", err);
     });
-}
-
-function backupData() {
-    let dataStr = "data:text/json;charset=utf-8," + encodeURIComponent(JSON.stringify(store));
-    let dlAnchor = document.createElement('a');
-    dlAnchor.setAttribute("href", dataStr);
-    dlAnchor.setAttribute("download", "pes_app_backup.json");
-    dlAnchor.click();
 }
 
 document.addEventListener('DOMContentLoaded', loadStorage);
